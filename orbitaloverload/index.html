@@ -9,10 +9,9 @@
 <style>
   :root { color-scheme: dark; }
   * { box-sizing: border-box; }
-  html, body { height: 100%; margin: 0; }
+  html, body { margin: 0; }
   body {
-    display: flex; align-items: center; justify-content: center;
-    padding: 24px 16px;
+    min-height: 100vh; padding: 20px 16px 48px;
     font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     color: #e8ecf8;
     background:
@@ -25,63 +24,252 @@
       radial-gradient(ellipse at 50% 120%, #1b2a5c 0%, #0a0e1f 60%, #05070f 100%);
     background-attachment: fixed;
   }
-  main { width: 100%; max-width: 460px; text-align: center; }
+  main { width: 100%; max-width: 860px; margin: 0 auto; text-align: center; }
+  .langs { display: flex; justify-content: flex-end; gap: 6px; margin-bottom: 20px; }
+  .langs button {
+    min-width: 44px; padding: 8px 12px; border-radius: 999px; cursor: pointer;
+    font: inherit; font-size: .8rem; font-weight: 600; letter-spacing: .04em;
+    color: #aab4d4; background: transparent; border: 1px solid #ffffff2e;
+  }
+  .langs button:hover, .langs button:focus-visible { color: #fff; border-color: #9fb6ff; }
+  .langs button[aria-pressed="true"] { color: #fff; background: #3d7bff; border-color: #3d7bff; }
   img.icon {
-    width: 128px; height: 128px; border-radius: 28px;
+    width: 112px; height: 112px; border-radius: 24px;
     image-rendering: pixelated;
     box-shadow: 0 0 0 1px #ffffff22, 0 12px 40px #2f6bff55;
   }
-  h1 { margin: 24px 0 8px; font-size: 1.75rem; letter-spacing: .02em; }
-  p.tagline { margin: 0 0 28px; color: #aab4d4; line-height: 1.5; }
+  h1 { margin: 20px 0 8px; font-size: 1.75rem; letter-spacing: .02em; }
+  p.tagline { margin: 0 auto 24px; max-width: 30rem; color: #aab4d4; line-height: 1.5; }
   a.play {
     display: inline-block; padding: 14px 28px; border-radius: 999px;
     background: #3d7bff; color: #fff; font-weight: 600; text-decoration: none;
   }
   a.play:hover, a.play:focus-visible { background: #5a90ff; }
-  nav { margin-top: 32px; font-size: .9rem; }
+  .gallery { position: relative; margin-top: 36px; }
+  .shots {
+    display: flex; gap: 12px; padding: 4px 4px 12px;
+    overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth;
+    scrollbar-width: thin; scrollbar-color: #3d4a7a transparent;
+  }
+  .shots button {
+    flex: 0 0 min(86%, 620px); padding: 0; line-height: 0; cursor: zoom-in;
+    border: 1px solid #ffffff1f; border-radius: 14px; overflow: hidden;
+    background: #05070f; scroll-snap-align: center;
+  }
+  .shots button:hover, .shots button:focus-visible { border-color: #9fb6ff; }
+  .shots img { display: block; width: 100%; height: auto; }
+  .gallery .step {
+    position: absolute; top: calc(50% - 28px); width: 40px; height: 40px; padding: 0;
+    border-radius: 50%; cursor: pointer; font-size: 1.2rem; line-height: 1;
+    color: #e8ecf8; background: #0a0e1fd9; border: 1px solid #ffffff33;
+  }
+  .gallery .step:hover { border-color: #9fb6ff; }
+  .gallery .step.prev { left: 10px; }
+  .gallery .step.next { right: 10px; }
+  @media (hover: none) { .gallery .step { display: none; } }
+  @media (prefers-reduced-motion: reduce) { .shots { scroll-behavior: auto; } }
+  dialog.zoom { padding: 0; border: 0; background: transparent; max-width: 96vw; max-height: 96vh; }
+  dialog.zoom::backdrop { background: #000000d9; }
+  dialog.zoom img { display: block; width: auto; height: auto; max-width: 96vw; max-height: 92vh; border-radius: 10px; cursor: zoom-out; }
+  .about { margin: 40px auto 0; max-width: 40rem; text-align: left; color: #c9d1ea; line-height: 1.6; }
+  .about p.intro { margin: 0 0 16px; }
+  ul.features { list-style: none; margin: 0; padding: 0; }
+  ul.features li { padding: 14px 0; border-top: 1px solid #ffffff14; }
+  ul.features strong { display: block; margin-bottom: 4px; font-size: .8rem; letter-spacing: .08em; color: #7fd4ff; }
+  nav { margin-top: 36px; font-size: .9rem; }
   nav a { color: #9fb6ff; text-decoration: none; margin: 0 10px; white-space: nowrap; }
   nav a:hover, nav a:focus-visible { text-decoration: underline; }
-  footer { margin-top: 40px; font-size: .75rem; color: #6b7699; }
-  [data-lang="es"] { display: none; }
-  html[lang="es"] [data-lang="es"] { display: revert; }
-  html[lang="es"] [data-lang="en"] { display: none; }
+  footer { margin-top: 36px; font-size: .75rem; color: #6b7699; }
+  [data-lang] { display: none; }
+  html[lang="en"] [data-lang="en"], html[lang="es"] [data-lang="es"],
+  html[lang="fr"] [data-lang="fr"], html[lang="de"] [data-lang="de"] { display: revert; }
 </style>
 <script>
-  if ((navigator.language || "").toLowerCase().indexOf("es") === 0) {
-    document.documentElement.lang = "es";
-    document.title = "Orbital Overload: Defensa Idle";
+  var LANGS = ["en", "es", "fr", "de"];
+  var TITLES = {
+    en: "Orbital Overload: Idle Defense",
+    es: "Orbital Overload: Defensa Idle",
+    fr: "Orbital Overload: Défense Idle",
+    de: "Orbital Overload: Idle-Abwehr"
+  };
+  // ?lang=xx manda; si no, el idioma elegido antes; si no, el del navegador.
+  function pickLang() {
+    var q = new URLSearchParams(location.search).get("lang");
+    if (LANGS.indexOf(q) >= 0) return q;
+    try {
+      var saved = localStorage.getItem("lang");
+      if (LANGS.indexOf(saved) >= 0) return saved;
+    } catch (e) {}
+    var nav = (navigator.language || "").toLowerCase().slice(0, 2);
+    return LANGS.indexOf(nav) >= 0 ? nav : "en";
   }
+  document.documentElement.lang = pickLang();
+  document.title = TITLES[document.documentElement.lang];
 </script>
 </head>
 <body>
 <main>
-  <img class="icon" src="icon.png" width="128" height="128" alt="Orbital Overload">
+  <div class="langs">
+    <button type="button" data-set-lang="es" lang="es" title="Español">ES</button>
+    <button type="button" data-set-lang="en" lang="en" title="English">EN</button>
+    <button type="button" data-set-lang="fr" lang="fr" title="Français">FR</button>
+    <button type="button" data-set-lang="de" lang="de" title="Deutsch">DE</button>
+  </div>
+
+  <img class="icon" src="icon.png" width="112" height="112" alt="">
   <h1>Orbital Overload</h1>
 
   <p class="tagline" data-lang="en">Turrets, endless upgrades and epic bosses: defend your pixel-art planet!</p>
   <p class="tagline" data-lang="es">Torretas, mejoras sin fin y jefes épicos: ¡defiende tu planeta en pixel art!</p>
+  <p class="tagline" data-lang="fr">Tourelles, améliorations sans fin, boss épiques : défendez votre planète !</p>
+  <p class="tagline" data-lang="de">Geschütze, endlose Upgrades und epische Bosse: Verteidige deinen Planeten!</p>
 
-  <a class="play" href="https://play.google.com/store/apps/details?id=com.orbitaloverload.game">
+  <a class="play" id="play" href="https://play.google.com/store/apps/details?id=com.orbitaloverload.game">
     <span data-lang="en">Get it on Google Play</span>
     <span data-lang="es">Disponible en Google Play</span>
+    <span data-lang="fr">Disponible sur Google Play</span>
+    <span data-lang="de">Jetzt bei Google Play</span>
   </a>
+
+  <div class="gallery">
+    <div class="shots" id="shots">
+      <button type="button" aria-label="Screenshot 1"><img src="shots/en/01.webp" width="2132" height="1200" alt="" loading="lazy"></button>
+      <button type="button" aria-label="Screenshot 2"><img src="shots/en/02.webp" width="2132" height="1200" alt="" loading="lazy"></button>
+      <button type="button" aria-label="Screenshot 3"><img src="shots/en/03.webp" width="2132" height="1200" alt="" loading="lazy"></button>
+      <button type="button" aria-label="Screenshot 4"><img src="shots/en/04.webp" width="2132" height="1200" alt="" loading="lazy"></button>
+      <button type="button" aria-label="Screenshot 5"><img src="shots/en/05.webp" width="2132" height="1200" alt="" loading="lazy"></button>
+      <button type="button" aria-label="Screenshot 6"><img src="shots/en/06.webp" width="2132" height="1200" alt="" loading="lazy"></button>
+      <button type="button" aria-label="Screenshot 7"><img src="shots/en/07.webp" width="2132" height="1200" alt="" loading="lazy"></button>
+      <button type="button" aria-label="Screenshot 8"><img src="shots/en/08.webp" width="2132" height="1200" alt="" loading="lazy"></button>
+    </div>
+    <button type="button" class="step prev" aria-hidden="true" tabindex="-1">&#8249;</button>
+    <button type="button" class="step next" aria-hidden="true" tabindex="-1">&#8250;</button>
+  </div>
+
+  <section class="about" data-lang="en">
+    <p class="intro">Your planet is all that stands between the galaxy and an endless tide of asteroids, alien ships and colossal bosses. Arm it with turrets, upgrade them every wave and find out how far you can go.</p>
+    <ul class="features">
+      <li><strong>14 UNIQUE WEAPONS</strong>Pulse cannon, laser gatling, railgun, homing missiles, Tesla coil, continuous beam, plasma mortar, drones, gravity well, orbital cannon, nova bomb, reaper disc and plasma flamethrower. At level 30, every weapon evolves into one of two versions.</li>
+      <li><strong>MIX AND EXPERIMENT</strong>10 ammo types (incendiary, cryo, shock, void…), 15 synergies between weapon pairs and permanent mastery for your favorites.</li>
+      <li><strong>DEEP PROGRESSION</strong>A laboratory with 136 permanent upgrades, ascensions that restart your run with new bonuses, 18 artifacts to collect and active abilities like the EMP Pulse or the Orbital Barrage.</li>
+      <li><strong>ENEMIES FOR EVERY TASTE</strong>37 enemy types, mini-bosses and 8 bosses with their own mechanics: a black hole that devours its allies, a crystal hydra that splits apart… plus special events like meteor showers, storms and eclipses.</li>
+      <li><strong>ALWAYS SOMETHING TO DO</strong>Daily challenge, 8 challenges with special rules, contracts, expeditions, 57 achievements, 12 planet skins and orbital mining while you're away.</li>
+      <li><strong>PLAY YOUR WAY</strong>x2, x3 and x4 speed, automatic upgrade buying and offline play.</li>
+      <li><strong>ADS ARE ALWAYS OPTIONAL</strong>You will never see an ad you didn't ask for: you decide whether to watch one to revive or to double your rewards.</li>
+    </ul>
+  </section>
+  <section class="about" data-lang="es">
+    <p class="intro">Tu planeta es lo único que se interpone entre la galaxia y una marea interminable de asteroides, naves alienígenas y jefes colosales. Equípalo con torretas, mejóralas en cada oleada y descubre hasta dónde puedes llegar.</p>
+    <ul class="features">
+      <li><strong>14 ARMAS ÚNICAS</strong>Cañón de pulsos, gatling láser, railgun, misiles buscadores, bobina Tesla, rayo continuo, mortero de plasma, drones, pozo gravitatorio, cañón orbital, bomba nova, disco segador y lanzallamas de plasma. Al nivel 30, cada arma evoluciona en una de dos versiones.</li>
+      <li><strong>COMBINA Y EXPERIMENTA</strong>10 municiones (incendiaria, criogénica, eléctrica, de vacío…), 15 sinergias entre parejas de armas y maestría permanente para tus favoritas.</li>
+      <li><strong>PROGRESIÓN PROFUNDA</strong>Un laboratorio con 136 mejoras permanentes, ascensiones que reinician la partida con nuevas bonificaciones, 18 artefactos que coleccionar y habilidades activas como el Pulso EMP o el Bombardeo Orbital.</li>
+      <li><strong>ENEMIGOS PARA TODOS LOS GUSTOS</strong>37 tipos de enemigos, semijefes y 8 jefes con mecánicas propias: un agujero negro que devora a sus aliados, una hidra de cristal que se divide… y eventos especiales como lluvias de meteoritos, tormentas o eclipses.</li>
+      <li><strong>SIEMPRE HAY ALGO QUE HACER</strong>Desafío diario, 8 desafíos con reglas especiales, contratos, expediciones, 57 logros, 12 aspectos de planeta y minería orbital mientras no juegas.</li>
+      <li><strong>JUEGA A TU MANERA</strong>Velocidad x2, x3 y x4, compra automática de mejoras y partidas sin conexión.</li>
+      <li><strong>ANUNCIOS SIEMPRE OPCIONALES</strong>Nunca verás un anuncio que no hayas pedido: tú decides si ves uno para revivir o para duplicar tus recompensas.</li>
+    </ul>
+  </section>
+  <section class="about" data-lang="fr">
+    <p class="intro">Votre planète est tout ce qui sépare la galaxie d'une vague sans fin d'astéroïdes, de vaisseaux extraterrestres et de boss colossaux. Équipez-la de tourelles, améliorez-les à chaque vague et découvrez jusqu'où vous pouvez aller.</p>
+    <ul class="features">
+      <li><strong>14 ARMES UNIQUES</strong>Canon à impulsions, gatling laser, canon électrique, missiles à tête chercheuse, bobine Tesla, rayon continu, mortier à plasma, drones, puits gravitationnel, canon orbital, bombe nova, disque faucheur et lance-flammes à plasma. Au niveau 30, chaque arme évolue vers l'une de deux versions.</li>
+      <li><strong>COMBINEZ ET EXPÉRIMENTEZ</strong>10 munitions (incendiaire, cryogénique, électrique, du néant…), 15 synergies entre paires d'armes et une maîtrise permanente pour vos favorites.</li>
+      <li><strong>UNE PROGRESSION PROFONDE</strong>Un laboratoire avec 136 améliorations permanentes, des ascensions qui relancent la partie avec de nouveaux bonus, 18 artefacts à collectionner et des compétences actives comme l'Impulsion IEM ou le Bombardement orbital.</li>
+      <li><strong>DES ENNEMIS POUR TOUS LES GOÛTS</strong>37 types d'ennemis, des mini-boss et 8 boss aux mécaniques uniques : un trou noir qui dévore ses alliés, une hydre de cristal qui se divise… et des événements spéciaux comme des pluies de météores, des tempêtes ou des éclipses.</li>
+      <li><strong>TOUJOURS QUELQUE CHOSE À FAIRE</strong>Défi quotidien, 8 défis aux règles spéciales, contrats, expéditions, 57 succès, 12 apparences de planète et minage orbital pendant votre absence.</li>
+      <li><strong>JOUEZ À VOTRE FAÇON</strong>Vitesse x2, x3 et x4, achat automatique des améliorations et jeu hors ligne.</li>
+      <li><strong>DES PUBLICITÉS TOUJOURS FACULTATIVES</strong>Vous ne verrez jamais une publicité que vous n'avez pas demandée : c'est vous qui décidez d'en regarder une pour ressusciter ou doubler vos récompenses.</li>
+    </ul>
+  </section>
+  <section class="about" data-lang="de">
+    <p class="intro">Dein Planet ist alles, was zwischen der Galaxie und einer endlosen Flut aus Asteroiden, Alienschiffen und gewaltigen Bossen steht. Rüste ihn mit Geschützen aus, verbessere sie in jeder Welle und finde heraus, wie weit du kommst.</p>
+    <ul class="features">
+      <li><strong>14 EINZIGARTIGE WAFFEN</strong>Pulskanone, Laser-Gatling, Railgun, Lenkraketen, Tesla-Spule, Dauerstrahl, Plasmamörser, Drohnen, Gravitationsschacht, Orbitalkanone, Nova-Bombe, Schnitterscheibe und Plasma-Flammenwerfer. Auf Stufe 30 entwickelt sich jede Waffe zu einer von zwei Versionen.</li>
+      <li><strong>KOMBINIERE UND EXPERIMENTIERE</strong>10 Munitionsarten (Brand, Kryo, Elektro, Leere …), 15 Synergien zwischen Waffenpaaren und dauerhafte Meisterschaft für deine Lieblingswaffen.</li>
+      <li><strong>TIEFGEHENDER FORTSCHRITT</strong>Ein Labor mit 136 dauerhaften Verbesserungen, Aufstiege, die den Durchgang mit neuen Boni neu starten, 18 Artefakte zum Sammeln und aktive Fähigkeiten wie EMP-Puls oder Orbitalbombardement.</li>
+      <li><strong>GEGNER FÜR JEDEN GESCHMACK</strong>37 Gegnertypen, Mini-Bosse und 8 Bosse mit eigenen Mechaniken: ein Schwarzes Loch, das seine Verbündeten verschlingt, eine Kristallhydra, die sich teilt … dazu Sonderereignisse wie Meteoritenschauer, Stürme und Finsternisse.</li>
+      <li><strong>IMMER ETWAS ZU TUN</strong>Tägliche Herausforderung, 8 Prüfungen mit Sonderregeln, Aufträge, Expeditionen, 57 Erfolge, 12 Planeten-Skins und Orbitalbergbau, während du offline bist.</li>
+      <li><strong>SPIEL, WIE DU WILLST</strong>x2-, x3- und x4-Geschwindigkeit, automatischer Kauf von Verbesserungen und Offline-Spiel.</li>
+      <li><strong>WERBUNG IMMER OPTIONAL</strong>Du siehst nie Werbung, die du nicht selbst angefordert hast: Du entscheidest, ob du dir eine ansiehst, um wiederbelebt zu werden oder deine Belohnungen zu verdoppeln.</li>
+    </ul>
+  </section>
 
   <nav>
     <a href="https://sites.google.com/view/orbitaloverload">
       <span data-lang="en">Privacy policy</span>
       <span data-lang="es">Política de privacidad</span>
+      <span data-lang="fr">Politique de confidentialité</span>
+      <span data-lang="de">Datenschutzerklärung</span>
     </a>
     <a href="mailto:orbitaloverload.game@gmail.com">
       <span data-lang="en">Contact</span>
       <span data-lang="es">Contacto</span>
+      <span data-lang="fr">Contact</span>
+      <span data-lang="de">Kontakt</span>
     </a>
     <a href="../">
       <span data-lang="en">More games</span>
       <span data-lang="es">Más juegos</span>
+      <span data-lang="fr">Plus de jeux</span>
+      <span data-lang="de">Weitere Spiele</span>
     </a>
   </nav>
 
   <footer>&copy; 2026 Orbital Overload</footer>
+
+  <dialog class="zoom" id="zoom"><img alt=""></dialog>
 </main>
+<script>
+(function () {
+  var SHOT = { en: "Screenshot", es: "Captura", fr: "Capture d'écran", de: "Screenshot" };
+  var PLAY = "https://play.google.com/store/apps/details?id=com.orbitaloverload.game&hl=";
+  var shots = document.getElementById("shots");
+  var zoom = document.getElementById("zoom");
+  var langButtons = document.querySelectorAll("[data-set-lang]");
+
+  function applyLang(lang) {
+    document.documentElement.lang = lang;
+    document.title = TITLES[lang];
+    document.getElementById("play").href = PLAY + lang;
+    langButtons.forEach(function (b) {
+      b.setAttribute("aria-pressed", b.dataset.setLang === lang);
+    });
+    // Las capturas llevan el texto del juego, así que hay un juego de imágenes por idioma.
+    shots.querySelectorAll("button").forEach(function (b, i) {
+      var url = "shots/" + lang + "/0" + (i + 1) + ".webp";
+      var img = b.firstElementChild;
+      b.setAttribute("aria-label", SHOT[lang] + " " + (i + 1));
+      if (img.getAttribute("src") !== url) img.src = url;
+    });
+  }
+
+  langButtons.forEach(function (b) {
+    b.addEventListener("click", function () {
+      var lang = b.dataset.setLang;
+      try { localStorage.setItem("lang", lang); } catch (e) {}
+      history.replaceState(null, "", "?lang=" + lang);
+      applyLang(lang);
+    });
+  });
+
+  document.querySelectorAll(".gallery .step").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var step = shots.firstElementChild.getBoundingClientRect().width + 12;
+      shots.scrollBy({ left: b.classList.contains("next") ? step : -step });
+    });
+  });
+
+  shots.addEventListener("click", function (e) {
+    var b = e.target.closest("button");
+    if (!b) return;
+    zoom.firstElementChild.src = b.firstElementChild.src;
+    zoom.showModal();
+  });
+  zoom.addEventListener("click", function () { zoom.close(); });
+
+  applyLang(document.documentElement.lang);
+})();
+</script>
 </body>
 </html>
