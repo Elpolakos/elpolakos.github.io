@@ -3,45 +3,34 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Orbital Overload: Idle Defense</title>
-<meta name="description" content="Turrets, endless upgrades and epic bosses: defend your pixel-art planet!">
-<link rel="icon" type="image/png" href="icon.png">
+<title>xtarvader games</title>
+<meta name="description" content="Mobile games by xtarvader: Orbital Overload and Bounce Abyss.">
+<link rel="icon" type="image/png" href="orbitaloverload/icon.png">
 <style>
   :root { color-scheme: dark; }
   * { box-sizing: border-box; }
-  html, body { height: 100%; margin: 0; }
+  html, body { margin: 0; }
   body {
-    display: flex; align-items: center; justify-content: center;
-    padding: 24px 16px;
+    min-height: 100vh; padding: 48px 16px;
     font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     color: #e8ecf8;
-    background:
-      radial-gradient(1px 1px at 12% 18%, #fff 50%, transparent 51%),
-      radial-gradient(1px 1px at 78% 32%, #cfe0ff 50%, transparent 51%),
-      radial-gradient(1px 1px at 34% 71%, #fff 50%, transparent 51%),
-      radial-gradient(1px 1px at 61% 86%, #ffe9c2 50%, transparent 51%),
-      radial-gradient(1px 1px at 90% 64%, #fff 50%, transparent 51%),
-      radial-gradient(1px 1px at 22% 44%, #cfe0ff 50%, transparent 51%),
-      radial-gradient(ellipse at 50% 120%, #1b2a5c 0%, #0a0e1f 60%, #05070f 100%);
-    background-attachment: fixed;
+    background: radial-gradient(ellipse at 50% 120%, #1b2a5c 0%, #0a0e1f 60%, #05070f 100%) fixed;
   }
-  main { width: 100%; max-width: 460px; text-align: center; }
-  img.icon {
-    width: 128px; height: 128px; border-radius: 28px;
-    image-rendering: pixelated;
-    box-shadow: 0 0 0 1px #ffffff22, 0 12px 40px #2f6bff55;
+  main { width: 100%; max-width: 720px; margin: 0 auto; text-align: center; }
+  h1 { margin: 0 0 8px; font-size: 1.9rem; letter-spacing: .02em; }
+  p.lead { margin: 0 0 36px; color: #aab4d4; }
+  .games { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+  a.game {
+    display: block; padding: 28px 20px; border-radius: 24px; text-decoration: none; color: inherit;
+    background: #ffffff0d; border: 1px solid #ffffff1f; transition: transform .15s, border-color .15s;
   }
-  h1 { margin: 24px 0 8px; font-size: 1.75rem; letter-spacing: .02em; }
-  p.tagline { margin: 0 0 28px; color: #aab4d4; line-height: 1.5; }
-  a.play {
-    display: inline-block; padding: 14px 28px; border-radius: 999px;
-    background: #3d7bff; color: #fff; font-weight: 600; text-decoration: none;
-  }
-  a.play:hover, a.play:focus-visible { background: #5a90ff; }
-  nav { margin-top: 32px; font-size: .9rem; }
-  nav a { color: #9fb6ff; text-decoration: none; margin: 0 10px; white-space: nowrap; }
-  nav a:hover, nav a:focus-visible { text-decoration: underline; }
-  footer { margin-top: 40px; font-size: .75rem; color: #6b7699; }
+  a.game:hover, a.game:focus-visible { transform: translateY(-3px); border-color: #9fb6ff; }
+  a.game img { width: 112px; height: 112px; border-radius: 24px; box-shadow: 0 10px 30px #00000066; }
+  a.game img.pixel { image-rendering: pixelated; }
+  a.game h2 { margin: 18px 0 6px; font-size: 1.25rem; }
+  a.game p { margin: 0; color: #aab4d4; line-height: 1.45; font-size: .95rem; }
+  footer { margin-top: 44px; font-size: .78rem; color: #6b7699; }
+  footer a { color: #9fb6ff; text-decoration: none; }
   [data-lang="es"] { display: none; }
   html[lang="es"] [data-lang="es"] { display: revert; }
   html[lang="es"] [data-lang="en"] { display: none; }
@@ -49,35 +38,34 @@
 <script>
   if ((navigator.language || "").toLowerCase().indexOf("es") === 0) {
     document.documentElement.lang = "es";
-    document.title = "Orbital Overload: Defensa Idle";
+    document.title = "Juegos de xtarvader";
   }
 </script>
 </head>
 <body>
 <main>
-  <img class="icon" src="icon.png" width="128" height="128" alt="Orbital Overload">
-  <h1>Orbital Overload</h1>
+  <h1 data-lang="en">xtarvader games</h1>
+  <h1 data-lang="es">Juegos de xtarvader</h1>
+  <p class="lead" data-lang="en">Free mobile games for Android.</p>
+  <p class="lead" data-lang="es">Juegos gratuitos para Android.</p>
 
-  <p class="tagline" data-lang="en">Turrets, endless upgrades and epic bosses: defend your pixel-art planet!</p>
-  <p class="tagline" data-lang="es">Torretas, mejoras sin fin y jefes épicos: ¡defiende tu planeta en pixel art!</p>
-
-  <a class="play" href="https://play.google.com/store/apps/details?id=com.orbitaloverload.game">
-    <span data-lang="en">Get it on Google Play</span>
-    <span data-lang="es">Disponible en Google Play</span>
-  </a>
-
-  <nav>
-    <a href="https://sites.google.com/view/orbitaloverload">
-      <span data-lang="en">Privacy policy</span>
-      <span data-lang="es">Política de privacidad</span>
+  <div class="games">
+    <a class="game" href="orbitaloverload/">
+      <img class="pixel" src="orbitaloverload/icon.png" width="112" height="112" alt="">
+      <h2>Orbital Overload</h2>
+      <p data-lang="en">Turrets, endless upgrades and epic bosses: defend your pixel-art planet!</p>
+      <p data-lang="es">Torretas, mejoras sin fin y jefes épicos: ¡defiende tu planeta en pixel art!</p>
     </a>
-    <a href="mailto:orbitaloverload.game@gmail.com">
-      <span data-lang="en">Contact</span>
-      <span data-lang="es">Contacto</span>
+    <a class="game" href="abismo/">
+      <img src="abismo/icon.png" width="112" height="112" alt="">
+      <h2 data-lang="en">Bounce Abyss</h2>
+      <h2 data-lang="es">Abismo</h2>
+      <p data-lang="en">Launch hundreds of balls, smash blocks and dive forever. Upgrade, fuse, descend.</p>
+      <p data-lang="es">Lanza cientos de bolas y rompe bloques sin fin. Mejora, fusiona y desciende.</p>
     </a>
-  </nav>
+  </div>
 
-  <footer>&copy; 2026 Orbital Overload</footer>
+  <footer>&copy; 2026 xtarvader · <a href="mailto:orbitaloverload.game@gmail.com"><span data-lang="en">Contact</span><span data-lang="es">Contacto</span></a></footer>
 </main>
 </body>
 </html>

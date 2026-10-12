@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bounce Abyss: Ball Breaker</title>
+<meta name="description" content="Launch hundreds of balls, smash blocks and dive forever. Upgrade, fuse, descend.">
+<link rel="icon" type="image/png" href="icon.png">
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    min-height: 100vh; padding: 0 16px 48px;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    color: #f2f3ff;
+    background: radial-gradient(ellipse at 50% 110%, #3a1f7a 0%, #150f2e 55%, #0b0b14 100%) fixed;
+  }
+  main { width: 100%; max-width: 760px; margin: 0 auto; text-align: center; }
+  img.hero { width: 100%; height: auto; border-radius: 0 0 24px 24px; display: block; box-shadow: 0 18px 60px #8a6bff33; }
+  img.icon {
+    width: 128px; height: 128px; border-radius: 28px; margin-top: -64px; position: relative;
+    box-shadow: 0 0 0 3px #0b0b14, 0 12px 40px #8a6bff66;
+  }
+  h1 { margin: 20px 0 8px; font-size: 1.9rem; letter-spacing: .02em; }
+  p.tagline { margin: 0 auto 24px; max-width: 30rem; color: #c4bfe6; line-height: 1.5; }
+  .soon {
+    display: inline-block; padding: 14px 28px; border-radius: 999px;
+    background: #35b866; color: #fff; font-weight: 600;
+  }
+  ul.features { list-style: none; padding: 0; margin: 32px auto 0; max-width: 34rem; text-align: left; line-height: 1.6; color: #dcd8f5; }
+  ul.features li { padding: 6px 0 6px 30px; position: relative; }
+  ul.features li::before { content: ""; position: absolute; left: 6px; top: 15px; width: 10px; height: 10px; border-radius: 50%; background: #ffd65a; box-shadow: 0 0 12px #ffd65a; }
+  .shots { display: flex; gap: 12px; justify-content: center; margin-top: 36px; flex-wrap: wrap; }
+  .shots img { width: 30%; min-width: 150px; max-width: 220px; height: auto; border-radius: 18px; border: 2px solid #343a5e; }
+  nav { margin-top: 36px; font-size: .95rem; }
+  nav a { color: #b9a6ff; text-decoration: none; margin: 0 10px; white-space: nowrap; }
+  nav a:hover, nav a:focus-visible { text-decoration: underline; }
+  footer { margin-top: 36px; font-size: .78rem; color: #7d789f; }
+  [data-lang="es"] { display: none; }
+  html[lang="es"] [data-lang="es"] { display: revert; }
+  html[lang="es"] [data-lang="en"] { display: none; }
+</style>
+<script>
+  if ((navigator.language || "").toLowerCase().indexOf("es") === 0) {
+    document.documentElement.lang = "es";
+    document.title = "Abismo: Rompebloques Roguelite";
+  }
+</script>
+</head>
+<body>
+<main>
+  <img class="hero" data-lang="en" src="hero_en.jpg" width="1024" height="500" alt="Bounce Abyss">
+  <img class="hero" data-lang="es" src="hero_es.jpg" width="1024" height="500" alt="Abismo">
+  <img class="icon" src="icon.png" width="128" height="128" alt="">
+
+  <h1 data-lang="en">Bounce Abyss: Ball Breaker</h1>
+  <h1 data-lang="es">Abismo: Rompebloques Roguelite</h1>
+
+  <p class="tagline" data-lang="en">Launch hundreds of balls, smash blocks and dive forever. Upgrade, fuse, descend.</p>
+  <p class="tagline" data-lang="es">Lanza cientos de bolas y rompe bloques sin fin. Mejora, fusiona y desciende.</p>
+
+  <span class="soon" data-lang="en">Coming soon to Google Play</span>
+  <span class="soon" data-lang="es">Próximamente en Google Play</span>
+
+  <ul class="features" data-lang="en">
+    <li>Aim, release and watch hundreds of balls tear through the floor.</li>
+    <li>35 elemental balls and 14 fusions to collect, level up and combine.</li>
+    <li>Five biomes, their guardians and bosses, and an abyss with no bottom.</li>
+    <li>A forge tree with 240 nodes, a laboratory and a Descent that makes every run stronger.</li>
+    <li>Free to play. No real-money purchases; ads are optional and give in-game rewards.</li>
+  </ul>
+  <ul class="features" data-lang="es">
+    <li>Apunta, suelta y mira cómo cientos de bolas atraviesan el piso.</li>
+    <li>35 bolas elementales y 14 fusiones para coleccionar, mejorar y combinar.</li>
+    <li>Cinco biomas, sus guardianes y jefes, y un abismo sin fondo.</li>
+    <li>Un árbol de la forja de 240 nodos, un laboratorio y un Descenso que hace más fuerte cada partida.</li>
+    <li>Gratis. Sin compras con dinero real; los anuncios son opcionales y dan recompensas del juego.</li>
+  </ul>
+
+  <div class="shots">
+    <img src="shot_1.jpg" width="360" height="780" alt="" loading="lazy">
+    <img src="shot_2.jpg" width="360" height="780" alt="" loading="lazy">
+    <img src="shot_3.jpg" width="360" height="780" alt="" loading="lazy">
+  </div>
+
+  <nav>
+    <a href="privacy.html">
+      <span data-lang="en">Privacy policy</span>
+      <span data-lang="es">Política de privacidad</span>
+    </a>
+    <a href="mailto:orbitaloverload.game@gmail.com">
+      <span data-lang="en">Contact</span>
+      <span data-lang="es">Contacto</span>
+    </a>
+    <a href="../">
+      <span data-lang="en">More games</span>
+      <span data-lang="es">Más juegos</span>
+    </a>
+  </nav>
+
+  <footer>&copy; 2026 xtarvader</footer>
+</main>
+</body>
+</html>
